@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+
+   <LinearLayout
+       android:id="@+id/clienteLinearLayout1"
+       android:layout_width="fill_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical" >
+
+       <EditText
+           android:id="@+id/productName"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_below="@+id/textView_enter_name"
+           android:layout_marginLeft="15dp"
+           android:layout_marginRight="15dp"
+           android:layout_marginTop="15dp"
+           android:ems="10"
+           android:hint="Nombre del producto"
+           android:inputType="text"
+           android:textSize="17sp" >
+
+           <requestFocus />
+       </EditText>
+
+       <EditText
+           android:id="@+id/productPrice"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_below="@+id/textView_enter_username"
+           android:layout_marginLeft="15dp"
+           android:layout_marginRight="15dp"
+           android:layout_marginTop="15dp"
+           android:ems="10"
+           android:hint="Precio"
+           android:inputType="numberSigned"
+           android:textSize="17sp" >
+       </EditText>
+
+       <EditText
+           android:id="@+id/productDescription"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_below="@+id/textView_enter_password"
+           android:layout_marginLeft="15dp"
+           android:layout_marginRight="15dp"
+           android:layout_marginTop="15dp"
+           android:ems="10"
+           android:hint="Descripción del producto"
+           android:inputType="textMultiLine"
+           android:textSize="17sp" >
+       </EditText>
+       
+       <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="15dp" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1.25"
+            android:text="Agregar imagen"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageViewAddProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1.25"
+            android:src="@drawable/addimageproduct" />
+
+    </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="0dip"
+           android:layout_weight="1"
+           android:gravity="center|bottom"
+           android:orientation="horizontal" >
+
+           <Button
+               android:id="@+id/btnUpdateProduct"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="145dp"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center_horizontal|center"
+               android:text="Actualizar Producto" />
+
+           <Button
+               android:id="@+id/btnCancel"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="145dp"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center_horizontal|center"
+               android:text="Cancelar" />
+       </LinearLayout>
+   </LinearLayout>
+
+</ScrollView>
