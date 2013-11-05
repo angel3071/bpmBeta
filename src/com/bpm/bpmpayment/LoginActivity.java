@@ -1,6 +1,11 @@
 package com.bpm.bpmpayment;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -23,7 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.bpm.bpmpayment.json.JsonCont;;
+import com.bpm.bpmpayment.json.JSONParser;
 
 public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
@@ -42,6 +47,7 @@ public class LoginActivity extends Activity {
 	public String pass;
 	public String email;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,9 +60,13 @@ public class LoginActivity extends Activity {
 		if(!storedMail.equals("") && !storedPass.equals("")){
 			pass = storedPass;
 			email = storedMail;
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+	        params.add(new BasicNameValuePair("email", email));
+	        params.add(new BasicNameValuePair("password", pass));	
+			
 			mAuthTask = new UserLoginTask();
-			mAuthTask.execute("http://bpmcart.com/bpmpayment/php/modelo/login.php?email="+storedMail+
-					                                                            "&password="+storedPass);
+			mAuthTask.execute(params);
 		}
 		
 		setContentView(R.layout.activity_login);
@@ -82,11 +92,19 @@ public class LoginActivity extends Activity {
 					@Override
 					public void onClick(View view) {
 						attemptLogin();					
+						
 						pass = (storedPass.equals(""))? mPasswordView.getText().toString():storedPass;
 						email = (storedMail.equals(""))? mEmailView.getText().toString():storedMail;
+						
+						pass =  mPasswordView.getText().toString();
+						email = mEmailView.getText().toString();
+						
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+				        params.add(new BasicNameValuePair("email", email));
+				        params.add(new BasicNameValuePair("password", pass));						
+						
 						mAuthTask = new UserLoginTask();
-						mAuthTask.execute("http://bpmcart.com/bpmpayment/php/modelo/login.php?email="+email+
-								                                                            "&password="+pass);
+						mAuthTask.execute(params);
 					}
 				});
 	}
@@ -180,14 +198,22 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public class UserLoginTask extends AsyncTask<String, Void, String>{
+	public class UserLoginTask extends AsyncTask<List<NameValuePair>, Void, String>{
 		@Override
-		protected String doInBackground(String... urls) {
+		protected String doInBackground(List<NameValuePair>... params) {
 			try {
-				String ret = new JsonCont().readJSONFeed(urls[0]);
-				Log.w("RETURN", ret);
+				for (NameValuePair nvp : params[0]) {
+				    String name = nvp.getName();
+				    String value = nvp.getValue();
+				    Log.w("name", name);
+				    Log.w("value", value);
+				}
+				
+				String ret = new JSONParser().getJSONFromUrl("http://bpmcart.com/bpmpayment/php/modelo/loginPost.php", params[0]);
+				Log.w("JSON", ret);
 				return ret;
 			} catch (Exception e) {
+				Log.w("Error doInBackground", e.getMessage());
 				return null;
 			}
 		}
@@ -200,9 +226,7 @@ public class LoginActivity extends Activity {
 	                if(!result.equals("false")) {
 	                	JSONObject jObject  = new JSONObject(result);
 	                	String usuario = jObject.getString("email");
-	                	
-	                	Log.w("USUARIO", usuario);
-		                
+	                			                
 		                Intent i = new Intent(getApplicationContext(), FragmentActivityMain.class);
 		                i.putExtra("usuario", usuario);
 		                
@@ -218,10 +242,10 @@ public class LoginActivity extends Activity {
 						finish();
 	                }
 	                else {
-	                	Toast.makeText(getBaseContext(), "Credenciales inv√°lidas",Toast.LENGTH_LONG).show();
+	                	Toast.makeText(getBaseContext(), "Credenciales inv·lidas",Toast.LENGTH_LONG).show();
 	                }
 	            } catch (Exception e) {
-	                Log.d("ReadJSONFeedTask", e.getLocalizedMessage());
+	                Log.d("ReadJSONFeedTask", e.getMessage());
 	                Toast.makeText(getBaseContext(), "Imposible conectarse a la red",Toast.LENGTH_LONG).show();
 	            }          
 		}

@@ -1,7 +1,10 @@
 package com.bpm.bpmpayment;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.os.AsyncTask;
@@ -13,9 +16,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.bpm.adapters.MyFragmentAdapter;
-import com.bpm.bpmpayment.json.JsonCont;
+import com.bpm.bpmpayment.json.JSONParser;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class FragmentActivityMain extends FragmentActivity {
@@ -33,6 +35,7 @@ public class FragmentActivityMain extends FragmentActivity {
 	private ViewPager mPager;
 	private TitlePageIndicator titleIndicator;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,13 +48,26 @@ public class FragmentActivityMain extends FragmentActivity {
 		mPager = (ViewPager) findViewById(R.id.pager);
 		titleIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
 		
+		List<NameValuePair> paramsClientes = new ArrayList<NameValuePair>();
+		paramsClientes.add(new BasicNameValuePair("email", usuario));
+		paramsClientes.add(new BasicNameValuePair("obtener", "clientes"));
+		
 		corrida = 1;
 		mAuthTaskClientes = new UserLoginTask();
-		mAuthTaskClientes.execute("http://bpmcart.com/bpmpayment/php/modelo/getCPF.php?email="+ usuario + "&obtener=clientes");
+		mAuthTaskClientes.execute(paramsClientes);
+		
+		List<NameValuePair> paramsFacturas = new ArrayList<NameValuePair>();
+        paramsFacturas.add(new BasicNameValuePair("email", usuario));
+        paramsFacturas.add(new BasicNameValuePair("obtener", "facturas"));
+        
 		mAuthTaskFacturas = new UserLoginTask();
-		mAuthTaskFacturas.execute("http://bpmcart.com/bpmpayment/php/modelo/getCPF.php?email="+ usuario + "&obtener=facturas");
+		mAuthTaskFacturas.execute(paramsFacturas);
+		
+		List<NameValuePair> paramsProductos = new ArrayList<NameValuePair>();
+        paramsProductos.add(new BasicNameValuePair("email", usuario));
+        paramsProductos.add(new BasicNameValuePair("obtener", "productos"));
 		mAuthTaskProductos = new UserLoginTask();
-		mAuthTaskProductos.execute("http://bpmcart.com/bpmpayment/php/modelo/getCPF.php?email="+ usuario + "&obtener=productos");
+		mAuthTaskProductos.execute(paramsProductos);
 		
 		if(intent.getStringExtra("ver") == null || intent.getStringExtra("ver").isEmpty()) {
 			verFragment = "0";
@@ -88,10 +104,10 @@ public class FragmentActivityMain extends FragmentActivity {
 		if (resultCode == RESULT_CANCELED) {}
 	}
 	
-	public class UserLoginTask extends AsyncTask<String, Void, String>{
+	public class UserLoginTask extends AsyncTask<List<NameValuePair>, Void, String>{
 		@Override
-		protected String doInBackground(String... urls) {
-			try { return new JsonCont().readJSONFeed(urls[0]); }
+		protected String doInBackground(List<NameValuePair>... params) {
+			try {return new JSONParser().getJSONFromUrl("http://bpmcart.com/bpmpayment/php/modelo/getCPF_Post.php", params[0]); }
 			catch (Exception e) { return null; }
 		}
 
@@ -101,7 +117,7 @@ public class FragmentActivityMain extends FragmentActivity {
 	                if(!result.equals("false")) {
 	                	if(corrida == 1) {
 	                		corrida = 2;
-	                		jObjectClientes  = new JSONObject(result);
+	                		jObjectClientes = new JSONObject(result);
 	                	}
 	                	else if(corrida == 2) {
 	                		corrida = 3;

@@ -26,7 +26,7 @@
             android:layout_height="2dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:background="#FF00FF00" />
+            android:background="#3E6FD8" />
 
         <EditText
             android:id="@+id/clienteNombres"
@@ -34,11 +34,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Nombres(s)"
             android:inputType="textPersonName"
-            android:textSize="18sp" >
+            android:textSize="18sp">
 
             <requestFocus />
         </EditText>
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Apellido paterno"
             android:inputType="textPersonName"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Apellido materno"
             android:inputType="textPersonName"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="email"
             android:inputType="textEmailAddress"
@@ -85,9 +85,158 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Razón Social"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteRFC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="RFC"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/layoutTelefonos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/linearlayout6"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1.25"
+                    android:text="Teléfonos(s)"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageAddCliente"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/add2" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dirección de facturación"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#3E6FD8" />
+        
+        <EditText
+            android:id="@+id/clientePais"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Pais"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Estado"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteCiudad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Ciudad"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteDelegacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Delegación"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteColonia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Colonia"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteCalleNumero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Calle y número"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteCP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="CP"
             android:inputType="textEmailAddress"
             android:textSize="18sp" />
 
@@ -102,67 +251,5 @@
             android:hint="Dirección"
             android:inputType="textMultiLine"
             android:textSize="18sp" />
-
-        <LinearLayout
-            android:id="@+id/layoutTelefonos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical" >
-
-            <!-- <LinearLayout
-                android:id="@+id/linearlayout6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Teléfono"
-                    android:textSize="18sp" />
-
-                <ImageButton
-                    android:id="@+id/imageAddCliente"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="8dp"
-                    android:src="@drawable/addimage" />
-
-            </LinearLayout> 
-            -->
-            
-            <LinearLayout
-                android:id="@+id/linearlayout6"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="5dp" >
-			
-			    <TextView
-			        android:id="@+id/textView1"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_margin="5dp"
-			        android:layout_weight="1.25"
-			        android:text="Teléfonos(s)"
-			        android:textSize="18sp" />
-			
-			    <ImageView
-			        android:id="@+id/imageAddCliente"
-			        android:layout_width="25dp"
-			        android:layout_height="25dp"
-			        android:layout_gravity="center_vertical"
-			        android:src="@drawable/add2" />
-			</LinearLayout>
-
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>
