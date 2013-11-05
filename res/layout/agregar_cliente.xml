@@ -37,8 +37,8 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Nombres(s)"
-            android:inputType="textPersonName"
-            android:textSize="18sp">
+            android:inputType="textCapWords|textPersonName"
+            android:textSize="18sp" >
 
             <requestFocus />
         </EditText>
@@ -52,7 +52,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Apellido paterno"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords|textPersonName"
             android:textSize="18sp" />
 
         <EditText
@@ -64,7 +64,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Apellido materno"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords|textPersonName"
             android:textSize="18sp" />
 
         <EditText
@@ -88,7 +88,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Razón Social"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapSentences"
             android:textSize="18sp" />
         
         <EditText
@@ -100,7 +100,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="RFC"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapCharacters"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -165,7 +165,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Pais"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapWords"
             android:textSize="18sp" />
         
         <EditText
@@ -177,7 +177,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Estado"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapWords"
             android:textSize="18sp" />
         
         <EditText
@@ -189,7 +189,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Ciudad"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapWords"
             android:textSize="18sp" />
         
         <EditText
@@ -201,7 +201,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Delegación"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapWords"
             android:textSize="18sp" />
         
         <EditText
@@ -213,7 +213,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Colonia"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapWords"
             android:textSize="18sp" />
         
         <EditText
@@ -225,7 +225,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Calle y número"
-            android:inputType="textEmailAddress"
+            android:inputType="textCapWords"
             android:textSize="18sp" />
         
         <EditText
@@ -237,19 +237,35 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="CP"
-            android:inputType="textEmailAddress"
+            android:inputType="numberDecimal"
             android:textSize="18sp" />
+        
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="15dp" >
 
-        <EditText
-            android:id="@+id/clienteDireccion"
+        <TextView
+            android:id="@+id/txtAgregarImg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="Dirección"
-            android:inputType="textMultiLine"
+            android:layout_margin="5dp"
+            android:layout_weight="1.25"
+            android:text="Agregar imagen cliente"
             android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageVaddClient"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/addimageuser" />
+
+    </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

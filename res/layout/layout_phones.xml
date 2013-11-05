@@ -6,6 +6,12 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp" >
 
+    <Spinner
+        android:id="@+id/planets_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/opciones_telefono" />
+
     <EditText
         android:id="@+id/editText1"
         android:layout_width="wrap_content"

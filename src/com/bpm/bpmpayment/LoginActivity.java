@@ -202,16 +202,7 @@ public class LoginActivity extends Activity {
 		@Override
 		protected String doInBackground(List<NameValuePair>... params) {
 			try {
-				for (NameValuePair nvp : params[0]) {
-				    String name = nvp.getName();
-				    String value = nvp.getValue();
-				    Log.w("name", name);
-				    Log.w("value", value);
-				}
-				
-				String ret = new JSONParser().getJSONFromUrl("http://bpmcart.com/bpmpayment/php/modelo/loginPost.php", params[0]);
-				Log.w("JSON", ret);
-				return ret;
+				return new JSONParser().getJSONFromUrl("http://bpmcart.com/bpmpayment/php/modelo/loginPost.php", params[0]);
 			} catch (Exception e) {
 				Log.w("Error doInBackground", e.getMessage());
 				return null;

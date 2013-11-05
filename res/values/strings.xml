@@ -27,5 +27,11 @@
         <item>Editar producto</item>
         <item>Eliminar producto</item>
     </string-array>
+    <string-array name="opciones_telefono">
+        <item>Casa</item>
+        <item>Celular</item>
+        <item>Oficina</item>
+        <item>Fax</item>
+    </string-array>
 
 </resources>

@@ -10,78 +10,108 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detalles de contacto"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#3E6FD8" />
+
         <EditText
-            android:id="@+id/clienteNombres"
+            android:id="@+id/clienteEditaNombres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Nombres(s)"
-            android:inputType="textCapSentences|textAutoCorrect"
+            android:inputType="textCapWords|textPersonName"
             android:textSize="18sp" >
 
             <requestFocus />
         </EditText>
 
         <EditText
-            android:id="@+id/clienteApellidoP"
+            android:id="@+id/clienteEditaApellidoP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Apellido paterno"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords|textPersonName"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/clienteApellidoM"
+            android:id="@+id/clienteEditaApellidoM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Apellido materno"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords|textPersonName"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/clienteEmail"
+            android:id="@+id/clienteEditaEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="email"
             android:inputType="textEmailAddress"
             android:textSize="18sp" />
-
+        
         <EditText
-            android:id="@+id/clienteDireccion"
+            android:id="@+id/clienteEditaRazonSocial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
-            android:hint="Dirección"
-            android:inputType="textMultiLine"
+            android:hint="Razón Social"
+            android:inputType="textCapSentences"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEditaRFC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="RFC"
+            android:inputType="textCapCharacters"
             android:textSize="18sp" />
 
         <LinearLayout
-            android:id="@+id/layoutTelefonos"
+            android:id="@+id/layoutEditaTelefonos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical" >
 
-            <LinearLayout 
+            <LinearLayout
                 android:id="@+id/linearlayout6"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -89,7 +119,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="5dp" >
-            
+
                 <TextView
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
@@ -98,7 +128,7 @@
                     android:layout_weight="1.25"
                     android:text="Teléfonos(s)"
                     android:textSize="18sp" />
-            
+
                 <ImageView
                     android:id="@+id/imageAddCliente"
                     android:layout_width="25dp"
@@ -106,7 +136,110 @@
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/add2" />
             </LinearLayout>
-
         </LinearLayout>
+        
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dirección de facturación"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#3E6FD8" />
+        
+        <EditText
+            android:id="@+id/clienteEditaPais"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Pais"
+            android:inputType="textCapWords"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEditaEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Estado"
+            android:inputType="textCapWords"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEditaCiudad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Ciudad"
+            android:inputType="textCapWords"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEditaDelegacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Delegación"
+            android:inputType="textCapWords"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEditaColonia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Colonia"
+            android:inputType="textCapWords"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEditaCalleNumero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Calle y número"
+            android:inputType="textCapWords"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteEditaCP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="CP"
+            android:inputType="numberDecimal"
+            android:textSize="18sp" />
+
     </LinearLayout>
 </ScrollView>
