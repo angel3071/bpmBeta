@@ -10,6 +10,24 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detalles de contacto"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#FF00FF00" />
+
         <EditText
             android:id="@+id/clienteNombres"
             android:layout_width="match_parent"
@@ -58,6 +76,18 @@
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="email"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
+        
+        <EditText
+            android:id="@+id/clienteRazonSocial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Razón Social"
             android:inputType="textEmailAddress"
             android:textSize="18sp" />
 
