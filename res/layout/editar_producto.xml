@@ -84,30 +84,6 @@
             android:src="@drawable/addimageproduct" />
 
     </LinearLayout>
-
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="0dip"
-           android:layout_weight="1"
-           android:gravity="center|bottom"
-           android:orientation="horizontal" >
-
-           <Button
-               android:id="@+id/btnUpdateProduct"
-               style="?android:attr/buttonStyleSmall"
-               android:layout_width="145dp"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center_horizontal|center"
-               android:text="Actualizar Producto" />
-
-           <Button
-               android:id="@+id/btnCancel"
-               style="?android:attr/buttonStyleSmall"
-               android:layout_width="145dp"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center_horizontal|center"
-               android:text="Cancelar" />
-       </LinearLayout>
    </LinearLayout>
 
 </ScrollView>

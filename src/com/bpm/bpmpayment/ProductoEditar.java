@@ -1,5 +1,9 @@
 package com.bpm.bpmpayment;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,7 +18,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.bpm.bpmpayment.json.JsonCont;;
+import com.bpm.bpmpayment.json.JSONParser;
 
 public class ProductoEditar extends Activity {
     private ProgressDialog pd = null;
@@ -23,7 +27,8 @@ public class ProductoEditar extends Activity {
 	private String nombre, precio, descripcion, idProducto, usuario;
 	private boolean flag;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @SuppressWarnings("unchecked")
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editar_producto);
         
@@ -34,10 +39,13 @@ public class ProductoEditar extends Activity {
 		nombreView = (EditText) findViewById(R.id.productName);
 		precioView = (EditText) findViewById(R.id.productPrice);
 		descripcionView = (EditText) findViewById(R.id.productDescription);
+		
+		List<NameValuePair> paramsEdit = new ArrayList<NameValuePair>();
+		paramsEdit.add(new BasicNameValuePair("id_producto", idProducto));
         
         this.flag = true;
         this.pd = ProgressDialog.show(this, "Procesando...", "Descargando datos...", true, false);
-        new DownloadTask().execute("http://bpmcart.com/bpmpayment/php/modelo/editProducto.php?id_producto=" + idProducto);
+        new DownloadTask().execute(paramsEdit);
     }
     
     private String eliminaEspacios(String palabras) {
@@ -50,19 +58,23 @@ public class ProductoEditar extends Activity {
 		InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void editarProducto() {
 		nombre = eliminaEspacios(nombreView.getText().toString());
 		precio = precioView.getText().toString();
 		descripcion = eliminaEspacios(descripcionView.getText().toString());
-						
-		String url = "http://bpmcart.com/bpmpayment/php/modelo/updateProducto.php?name=" + nombre +
-				     "&price=" + precio + "&desc=" + descripcion +  "&idProducto=" + idProducto;
+		
+		List<NameValuePair> paramsUpdate = new ArrayList<NameValuePair>();
+		paramsUpdate.add(new BasicNameValuePair("name", nombre));
+		paramsUpdate.add(new BasicNameValuePair("price", precio));
+		paramsUpdate.add(new BasicNameValuePair("desc", descripcion));
+		paramsUpdate.add(new BasicNameValuePair("idProducto", idProducto));
 						
 		ProductoEditar.this.flag = false;
 		esconderTeclado();
-		ProductoEditar.this.pd = ProgressDialog.show(ProductoEditar.this, "Procesando...", "Actualizando datos del cliente...", true, false);
+		ProductoEditar.this.pd = ProgressDialog.show(ProductoEditar.this, "Procesando...", "Actualizando datos del producto...", true, false);
 		ProductoEditar.this.mAuthTask = new DownloadTask();
-		mAuthTask.execute(url);
+		mAuthTask.execute(paramsUpdate);
 	}
 	
 	@Override
@@ -90,13 +102,23 @@ public class ProductoEditar extends Activity {
 	    }
 	}
 
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-         protected String doInBackground(String... urls) {
-        	 try {
- 				return new JsonCont().readJSONFeed(urls[0]);
- 			} catch (Exception e) {
- 				return null;
- 			}
+    private class DownloadTask extends AsyncTask<List<NameValuePair>, Void, String> {
+         protected String doInBackground(List<NameValuePair>... params) {
+        	if(flag) {
+        		try {
+        			return new JSONParser().getJSONFromUrl("http://bpmcart.com/bpmpayment/php/modelo/editProducto_Post.php", params[0]);
+     			} catch (Exception e) {
+     				return null;
+     			}
+        	}
+        	else {
+        		try {
+        			return new JSONParser().getJSONFromUrl("http://bpmcart.com/bpmpayment/php/modelo/updateProducto_Post.php", params[0]);
+     			} catch (Exception e) {
+     				return null;
+     			}
+        	}
+        	
          }
 
          protected void onPostExecute(String result) {

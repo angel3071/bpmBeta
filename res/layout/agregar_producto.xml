@@ -35,7 +35,7 @@
 	    android:layout_below="@+id/textView_enter_username"
 	    android:layout_marginLeft="15dp"
 	    android:layout_marginRight="15dp"
-	    android:layout_marginTop="15dp"
+	    android:layout_marginTop="10dp"
 	    android:ems="10"
 	    android:hint="Precio"
 	    android:inputType="numberDecimal"
@@ -51,7 +51,7 @@
 	    android:layout_below="@+id/textView_enter_password"
 	    android:layout_marginLeft="15dp"
 	    android:layout_marginRight="15dp"
-	    android:layout_marginTop="15dp"
+	    android:layout_marginTop="10dp"
 	    android:ems="10"
 	    android:hint="Descripción del producto"
 	    android:inputType="textMultiLine"
@@ -73,15 +73,17 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_margin="5dp"
+		    android:layout_marginBottom="20dp"
 		    android:layout_weight="1.25"
 		    android:text="Agregar imagen"
 		    android:textSize="18sp" />
 
 		<ImageView
 		    android:id="@+id/imageViewAddProduct"
-		    android:layout_width="wrap_content"
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_horizontal"
+		    android:layout_marginTop="20dp"
 		    android:layout_weight="1.25"
 		    android:src="@drawable/addimageproduct" />
 
