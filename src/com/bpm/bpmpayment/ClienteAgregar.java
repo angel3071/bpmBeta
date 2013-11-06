@@ -1,15 +1,29 @@
 package com.bpm.bpmpayment;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +38,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import com.bpm.bpmpayment.json.JSONParser;
 
+import eu.janmuller.android.simplecropimage.CropImage;
+
 public class ClienteAgregar extends Activity {
+	private static final int REQUEST_CODE_CROP_IMAGE = 0;
 	private UserLoginTask mAuthTask = null;
 	private ProgressDialog pd = null;
 	private EditText nombresView, apellidpPView, apellidpMView, emailView, razonSocialView, rfcView;
@@ -33,6 +50,8 @@ public class ClienteAgregar extends Activity {
 	private String pais, estado, ciudad, delegacion, colonia, calleNumero, cp;
 	private String usuario;
 	private LinearLayout layoutTelefonos;
+	private ImageView viewImageAddCliente;
+	private File file;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +75,37 @@ public class ClienteAgregar extends Activity {
         coloniaView = (EditText)findViewById(R.id.clienteColonia);
         calleNumeroView = (EditText)findViewById(R.id.clienteCalleNumero);
         cpView = (EditText)findViewById(R.id.clienteCP);
+        viewImageAddCliente = (ImageView) findViewById(R.id.imageViewAddClient);
+        
+        viewImageAddCliente.setClickable(true);
+        viewImageAddCliente.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {				
+				final CharSequence[] options = { "Tomar Foto", "Escoger de la galería","Cancelar" };
+				 
+		        AlertDialog.Builder builder = new AlertDialog.Builder(ClienteAgregar.this);
+		        builder.setTitle("Agrega foto del cliente");
+		        builder.setItems(options, new DialogInterface.OnClickListener() {
+		            @Override
+		            public void onClick(DialogInterface dialog, int item) {
+		                if (item == 0) {
+		                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+		                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+		                    startActivityForResult(intent, 1);
+		                }
+		                else if (item == 1) {
+		                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		                    startActivityForResult(intent, 2);
+		                }
+		                else if (item == 2) {
+		                    dialog.dismiss();
+		                }
+		            }
+		        });
+		        builder.show();
+			}
+		});
                       
         ImageView addPhone = (ImageView) findViewById(R.id.imageAddCliente);
         addPhone.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +126,16 @@ public class ClienteAgregar extends Activity {
 		});
 	}
 	
+	private void runCropImage(String filePath) {
+	    Intent intent = new Intent(this, CropImage.class);
+	    intent.putExtra(CropImage.IMAGE_PATH, filePath);
+	    intent.putExtra(CropImage.SCALE, true);
+	    
+	    intent.putExtra(CropImage.ASPECT_X, 3);
+	    intent.putExtra(CropImage.ASPECT_Y, 3);
+	    startActivityForResult(intent, REQUEST_CODE_CROP_IMAGE);
+	}
+	
 	private String eliminaEspacios(String palabras) {
     	return palabras.replaceAll("\\s", "~");
     }
@@ -85,6 +145,12 @@ public class ClienteAgregar extends Activity {
 		inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
 		InputMethodManager.HIDE_NOT_ALWAYS);
 	}
+	
+	private int dpToPx(int dp)
+    {
+        float density = getApplicationContext().getResources().getDisplayMetrics().density;
+        return Math.round((float)dp * density);
+    }
 	
 	@SuppressWarnings("unchecked")
 	private void agregaCliente() {
@@ -182,6 +248,105 @@ public class ClienteAgregar extends Activity {
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+        	
+        	Log.w("requestCode", String.valueOf(requestCode));
+        	
+        	if(requestCode == 0) {            	
+            	Bitmap bitmap;
+                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                bitmapOptions.inSampleSize = 2;
+
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), bitmapOptions);
+                viewImageAddCliente.setImageBitmap(bitmap);
+            }
+        	
+        	else if (requestCode == 1) {
+            	File f = new File(Environment.getExternalStorageDirectory().toString() + "/temp.jpg");
+                
+                try {
+                    Bitmap bitmap;
+                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                    bitmapOptions.inSampleSize = 2;
+ 
+                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
+                    
+                    int width = bitmap.getWidth();
+                    int height = bitmap.getHeight();
+                    int bounding = dpToPx(600);
+                    Log.i("Test", "original width = " + Integer.toString(width));
+                    Log.i("Test", "original height = " + Integer.toString(height));
+                    Log.i("Test", "bounding = " + Integer.toString(bounding));
+                    
+                    float xScale = ((float) bounding) / width;
+                    float yScale = ((float) bounding) / height;
+                    float scale = (xScale <= yScale) ? xScale : yScale;
+                    Log.i("Test", "xScale = " + Float.toString(xScale));
+                    Log.i("Test", "yScale = " + Float.toString(yScale));
+                    Log.i("Test", "scale = " + Float.toString(scale));
+                    
+                    Matrix matrix = new Matrix();
+                    matrix.postScale(scale, scale);
+                    
+                    Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+                    width = scaledBitmap.getWidth(); // re-use
+                    height = scaledBitmap.getHeight(); // re-use
+                    Log.i("Test", "scaled width = " + Integer.toString(width));
+                    Log.i("Test", "scaled height = " + Integer.toString(height));
+                    
+                    bitmap.recycle();
+                    
+                    String path = android.os.Environment
+                            .getExternalStorageDirectory()
+                            + File.separator
+                            + "DCIM" + File.separator + "Camera" + File.separator;
+                    f.delete();
+                    OutputStream outFile = null;
+                    file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+
+                    try {
+                        outFile = new FileOutputStream(file);
+                        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
+                        outFile.flush();
+                        outFile.close();
+                        
+                        runCropImage(file.getAbsolutePath());                       
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (requestCode == 2) {
+            	Uri selectedImage = data.getData();
+                String[] filePath = { MediaStore.Images.Media.DATA };
+                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                String picturePath = c.getString(columnIndex);
+                c.close();
+                
+                file = new File(picturePath);
+                
+                File temp = null;
+                try {
+                	temp = File.createTempFile("tmp", ".jpg", new File(file.getParent()));
+                	Log.w("NOMBRE", temp.getAbsolutePath());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+                runCropImage(file.getAbsolutePath());
+            }
+        }        
+    } 
 	
 	public class UserLoginTask extends AsyncTask<List<NameValuePair>, Void, String>{
 		@Override
