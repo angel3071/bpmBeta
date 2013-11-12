@@ -1,10 +1,13 @@
 package com.bpm.bpmpayment;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.NameValuePair;
@@ -24,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,8 +54,11 @@ public class ClienteAgregar extends Activity {
 	private String pais, estado, ciudad, delegacion, colonia, calleNumero, cp;
 	private String usuario;
 	private LinearLayout layoutTelefonos;
-	private ImageView viewImageAddCliente;
+	private ImageView viewImageAddCliente, deleteFotoView;
 	private File file;
+	private boolean flagFoto = false;
+	private FileInputStream fileInputStream;
+	private FileOutputStream fileOutputStream;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +82,16 @@ public class ClienteAgregar extends Activity {
         coloniaView = (EditText)findViewById(R.id.clienteColonia);
         calleNumeroView = (EditText)findViewById(R.id.clienteCalleNumero);
         cpView = (EditText)findViewById(R.id.clienteCP);
+        deleteFotoView = (ImageView) findViewById(R.id.clienteImageDeleteFoto);
         viewImageAddCliente = (ImageView) findViewById(R.id.imageViewAddClient);
-        
+
         viewImageAddCliente.setClickable(true);
         viewImageAddCliente.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {				
 				final CharSequence[] options = { "Tomar Foto", "Escoger de la galería","Cancelar" };
+				
+				esconderTeclado();
 				 
 		        AlertDialog.Builder builder = new AlertDialog.Builder(ClienteAgregar.this);
 		        builder.setTitle("Agrega foto del cliente");
@@ -109,7 +119,6 @@ public class ClienteAgregar extends Activity {
                       
         ImageView addPhone = (ImageView) findViewById(R.id.imageAddCliente);
         addPhone.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {				
 				final LayoutInflater  inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -124,16 +133,82 @@ public class ClienteAgregar extends Activity {
 			    layoutTelefonos.addView(ll, layoutTelefonos.getChildCount());
 			}
 		});
+        
+        deleteFotoView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				viewImageAddCliente.setImageResource(R.drawable.addimageuser);
+				file.delete();
+				deleteFotoView.setEnabled(false);
+				deleteFotoView.setVisibility(View.INVISIBLE);
+				flagFoto = false;
+			}
+		});
+        
+        this.flagFoto = false;
 	}
 	
 	private void runCropImage(String filePath) {
 	    Intent intent = new Intent(this, CropImage.class);
 	    intent.putExtra(CropImage.IMAGE_PATH, filePath);
 	    intent.putExtra(CropImage.SCALE, true);
-	    
 	    intent.putExtra(CropImage.ASPECT_X, 3);
 	    intent.putExtra(CropImage.ASPECT_Y, 3);
 	    startActivityForResult(intent, REQUEST_CODE_CROP_IMAGE);
+	    
+	    this.deleteFotoView.setEnabled(true);
+	    this.deleteFotoView.setVisibility(View.VISIBLE);
+	    this.flagFoto = true;
+	}
+	
+	private Bitmap reduceImagen() {		
+		Bitmap bitmap;
+        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inSampleSize = 2;
+        bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), bitmapOptions);
+        
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int bounding = dpToPx(250);
+        Log.i("Test", "original width = " + Integer.toString(width));
+        Log.i("Test", "original height = " + Integer.toString(height));
+        Log.i("Test", "bounding = " + Integer.toString(bounding));
+        
+        float xScale = ((float) bounding) / width;
+        float yScale = ((float) bounding) / height;
+        float scale = (xScale <= yScale) ? xScale : yScale;
+        Log.i("Test", "xScale = " + Float.toString(xScale));
+        Log.i("Test", "yScale = " + Float.toString(yScale));
+        Log.i("Test", "scale = " + Float.toString(scale));
+        
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+        
+        Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+        width = scaledBitmap.getWidth(); // re-use
+        height = scaledBitmap.getHeight(); // re-use
+        Log.i("Test", "scaled width = " + Integer.toString(width));
+        Log.i("Test", "scaled height = " + Integer.toString(height));
+        
+        bitmap.recycle();
+        
+        OutputStream outFile = null;
+        File file2 = new File(file.getAbsolutePath());
+        try {
+            outFile = new FileOutputStream(file2);
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outFile);
+            outFile.flush();
+            outFile.close();
+                                  
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return scaledBitmap;
 	}
 	
 	private String eliminaEspacios(String palabras) {
@@ -151,6 +226,33 @@ public class ClienteAgregar extends Activity {
         float density = getApplicationContext().getResources().getDisplayMetrics().density;
         return Math.round((float)dp * density);
     }
+	
+	private File copyFile(String sourceFile) throws IOException {
+		File destination = null;
+		try {
+			String path = FragmentActivityMain.dataAppDirectory;
+		    File sd = new File(path);
+		    
+		    if (sd.canWrite()) {
+		        String destinationImagePath = path + "tempFileClient.jpg";
+		        File source= new File(sourceFile);
+		        destination= new File(destinationImagePath);
+		        if (source.exists()) {
+		            fileInputStream = new FileInputStream(source);
+					FileChannel src = fileInputStream.getChannel();
+		            fileOutputStream = new FileOutputStream(destination);
+					FileChannel dst = fileOutputStream.getChannel();
+		            dst.transferFrom(src, 0, src.size());
+		            src.close();
+		            dst.close();
+		        }
+		    }
+		} catch (Exception e) {
+			Log.w("ERROR", "Error al copiar la imagen!");
+		}
+		
+		return destination;
+	}
 	
 	@SuppressWarnings("unchecked")
 	private void agregaCliente() {
@@ -218,6 +320,18 @@ public class ClienteAgregar extends Activity {
 		
 		params.add(new BasicNameValuePair("emailUser", usuario));
 		
+		if(this.flagFoto) {
+			Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+			byte[] byteArray = stream.toByteArray();
+			String imageEncode = Base64.encodeToString(byteArray, Base64.DEFAULT);
+			params.add(new BasicNameValuePair("image", imageEncode));
+		}
+		else {
+			params.add(new BasicNameValuePair("image", "NULL"));
+		}
+		
 		esconderTeclado();
 		ClienteAgregar.this.pd = ProgressDialog.show(ClienteAgregar.this, "Procesando...", "Registrando datos...", true, false);
 		mAuthTask = new UserLoginTask();
@@ -253,67 +367,30 @@ public class ClienteAgregar extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-        	
-        	Log.w("requestCode", String.valueOf(requestCode));
-        	
-        	if(requestCode == 0) {            	
-            	Bitmap bitmap;
-                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                bitmapOptions.inSampleSize = 2;
-
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), bitmapOptions);
-                viewImageAddCliente.setImageBitmap(bitmap);
+        	if(requestCode == 0) {
+                viewImageAddCliente.setImageBitmap(reduceImagen());
             }
-        	
         	else if (requestCode == 1) {
+        		// Imagen tomada por la cámara
             	File f = new File(Environment.getExternalStorageDirectory().toString() + "/temp.jpg");
                 
                 try {
                     Bitmap bitmap;
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmapOptions.inSampleSize = 2;
- 
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
                     
-                    int width = bitmap.getWidth();
-                    int height = bitmap.getHeight();
-                    int bounding = dpToPx(600);
-                    Log.i("Test", "original width = " + Integer.toString(width));
-                    Log.i("Test", "original height = " + Integer.toString(height));
-                    Log.i("Test", "bounding = " + Integer.toString(bounding));
+                    String path = FragmentActivityMain.dataAppDirectory;
                     
-                    float xScale = ((float) bounding) / width;
-                    float yScale = ((float) bounding) / height;
-                    float scale = (xScale <= yScale) ? xScale : yScale;
-                    Log.i("Test", "xScale = " + Float.toString(xScale));
-                    Log.i("Test", "yScale = " + Float.toString(yScale));
-                    Log.i("Test", "scale = " + Float.toString(scale));
-                    
-                    Matrix matrix = new Matrix();
-                    matrix.postScale(scale, scale);
-                    
-                    Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-                    width = scaledBitmap.getWidth(); // re-use
-                    height = scaledBitmap.getHeight(); // re-use
-                    Log.i("Test", "scaled width = " + Integer.toString(width));
-                    Log.i("Test", "scaled height = " + Integer.toString(height));
-                    
-                    bitmap.recycle();
-                    
-                    String path = android.os.Environment
-                            .getExternalStorageDirectory()
-                            + File.separator
-                            + "DCIM" + File.separator + "Camera" + File.separator;
                     f.delete();
                     OutputStream outFile = null;
                     file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
 
                     try {
                         outFile = new FileOutputStream(file);
-                        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
                         outFile.flush();
                         outFile.close();
-                        
                         runCropImage(file.getAbsolutePath());                       
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -326,24 +403,26 @@ public class ClienteAgregar extends Activity {
                     e.printStackTrace();
                 }
             } else if (requestCode == 2) {
+            	// Imagen tomada de la galería
             	Uri selectedImage = data.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };
                 Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
-                c.close();
+                c.close();                
                 
-                file = new File(picturePath);
-                
-                File temp = null;
                 try {
-                	temp = File.createTempFile("tmp", ".jpg", new File(file.getParent()));
-                	Log.w("NOMBRE", temp.getAbsolutePath());
+					file = copyFile(picturePath);
+					if( file != null ) {
+						runCropImage(file.getAbsolutePath());
+					}
+					else {
+						Toast.makeText(getBaseContext(), "Ocurrio algún error", Toast.LENGTH_SHORT).show();
+					}					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-                runCropImage(file.getAbsolutePath());
             }
         }        
     } 

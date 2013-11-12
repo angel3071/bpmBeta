@@ -1,5 +1,6 @@
 package com.bpm.bpmpayment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +36,21 @@ public class FragmentActivityMain extends FragmentActivity {
 	private ViewPager mPager;
 	private TitlePageIndicator titleIndicator;
 	
+	public static final String dataAppDirectory = android.os.Environment
+			                                       .getExternalStorageDirectory() + File.separator
+			                                       + "Android" + File.separator + "data" + File.separator
+			                                       + "com.bpm.bpmpayment" + File.separator;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_principal);
+		
+		File directorio = new File(dataAppDirectory);
+		if(!directorio.exists()) {
+			directorio.mkdir();
+		}
 		
 		this.pd = ProgressDialog.show(this, "Procesando...", "Descargando información...", true, false);
 		Intent intent = getIntent();
